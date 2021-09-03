@@ -48,7 +48,7 @@ class LifeTest extends TestCase
     }
 
     //1. Any live cell with fewer than two live neighbours dies, as if by underpopulation.
-    public function test_loneliness(){
+    public function test_underpopulation(){
 
         //Assess
         $this->sut->init([
@@ -62,11 +62,89 @@ class LifeTest extends TestCase
         //Act
         $this->sut->nextGeneration();
 
-        var_dump($this->sut);
-
         //Assert
         return $this->assertFalse($this->sut->isAlive(0,0));
         return $this->assertFalse($this->sut->isAlive(4,4));
     }
 
+    //Any live cell with two or three live neighbours lives on to the next generation.
+    public function test_survive(){
+
+        //Assess
+        $this->sut->init([
+            [1, 0, 0, 0, 0],
+            [1, 0, 1, 0, 0],
+            [0, 0, 0, 0, 0],
+            [0, 0, 0, 1, 1],
+            [0, 0, 0, 1, 1]
+        ]);
+
+        //Act
+        $this->sut->nextGeneration();
+
+        //Assert
+        return $this->assertTrue($this->sut->isAlive(3,3));
+        return $this->assertTrue($this->sut->isAlive(3,4));
+    }
+
+
+    //Any live cell with more than three live neighbours dies, as if by overpopulation.
+    public function test_overpopulation(){
+
+        //Assess
+        $this->sut->init([
+            [1, 0, 0, 0, 0],
+            [1, 0, 1, 0, 0],
+            [0, 0, 0, 1, 1],
+            [0, 0, 0, 1, 1],
+            [0, 0, 0, 1, 1]
+        ]);
+
+        //Act
+        $this->sut->nextGeneration();
+
+        //Assert
+        return $this->assertFalse($this->sut->isAlive(3,4));
+        return $this->assertTrue($this->sut->isAlive(4,3));
+    }
+
+    //Any dead cell with exactly three live neighbours becomes a live cell, as if by reproduction.
+    public function test_reproduction(){
+
+        //Assess
+        $this->sut->init([
+            [1, 0, 0, 0, 0],
+            [1, 0, 1, 0, 0],
+            [0, 0, 0, 1, 0],
+            [0, 0, 0, 1, 1],
+            [0, 0, 0, 1, 1]
+        ]);
+
+        //Act
+        $this->sut->nextGeneration();
+
+        //Assert
+        return $this->assertTrue($this->sut->isAlive(3,2));
+        return $this->assertFalse($this->sut->isAlive(1,3));
+    }
+
+    //all other dead cells stay dead.
+    public function test_dead(){
+
+        //Assess
+        $this->sut->init([
+            [1, 0, 0, 0, 0],
+            [1, 0, 1, 0, 0],
+            [0, 0, 0, 0, 0],
+            [0, 0, 0, 1, 1],
+            [0, 0, 0, 1, 1]
+        ]);
+
+        //Act
+        $this->sut->nextGeneration();
+
+        //Assert
+        return $this->assertFalse($this->sut->isAlive(4,0));
+        return $this->assertFalse($this->sut->isAlive(0,4));
+    }
 }

@@ -19,15 +19,32 @@ class LifeEngine{
         $newWorld = [];
         //$oldWorld = $this->world;
 
-        // 1. Any live cell with fewer than two live neighbours dies, as if by underpopulation.
         foreach($this->world as $rowIndex => $row) {
             foreach($row as $colIndex => $cell) {
                 if ($cell == 1) {
                     $liveNeighbours = $this->countLiveNeighbours($rowIndex, $colIndex);
 
-                    ($liveNeighbours < 2) ? $newWorld[$rowIndex][$colIndex] = 0 : $newWorld[$rowIndex][$colIndex] = 1;
+                    if ($liveNeighbours == 2 || $liveNeighbours == 3){
+                        //Any live cell with two or three live neighbours lives on to the next generation.
+                        $newWorld[$rowIndex][$colIndex] = 1;
+
+                    } else {
+                        //Any live cell with fewer than two live neighbours dies, as if by underpopulation.
+                        //Any live cell with more than three live neighbours dies, as if by overpopulation.
+                        $newWorld[$rowIndex][$colIndex] = 0;
+                    }
+
                 } else {
-                    $newWorld[$rowIndex][$colIndex] = 0;
+                    $liveNeighbours = $this->countLiveNeighbours($rowIndex, $colIndex);
+
+                    if ($liveNeighbours == 3){
+                        //Any dead cell with exactly three live neighbours becomes a live cell, as if by reproduction.              
+                        $newWorld[$rowIndex][$colIndex] = 1;
+
+                    } else {
+                        //all other dead cells stay dead.
+                        $newWorld[$rowIndex][$colIndex] = 0;
+                    }
                 }
             }
         }
