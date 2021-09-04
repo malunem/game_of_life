@@ -3,7 +3,7 @@ What is Game of Life: https://en.wikipedia.org/wiki/Conway%27s_Game_of_Life
 Project structure:
 - Engine is in App\Services\LifeEngine.php
 - Tests are in Test\Unit\LifeTest.php
-- Terminal command and visualization script is in App\Console\Commands\StartGame.php (here you can also change initial configuration to see different evolutions.
+- Terminal command and visualization script is in App\Console\Commands\StartGame.php (here you can also change initial configuration to see different evolutions).
 
 To run the Game, use **php artisan startgame**
 
